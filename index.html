@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ai hiểu SMO?</title>
+<style>
+:root{--bg:#050b2b;--panel:#101a4b;--gold:#ffd66b;--blue:#18377f;--muted:#bdcafa}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% 0,#263e91,transparent 48%),var(--bg);color:#f7f8ff;font-family:Arial,sans-serif}
+button{font:inherit;cursor:pointer}.app{max-width:1150px;margin:auto;padding:22px}.top{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:22px}.brand{color:var(--gold);font-weight:900;letter-spacing:2px}.brand small{display:block;color:var(--muted);font-size:11px;margin-top:5px}.small{background:#172657;color:white;border:1px solid #4c66b5;border-radius:9px;padding:9px 12px}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:20px}.hero{text-align:center;margin:10px 0 20px}.logo{width:75px;height:75px;border:3px solid var(--gold);border-radius:50%;display:grid;place-items:center;margin:auto auto 12px;color:var(--gold);font-size:32px;box-shadow:0 0 30px #ffd66b44}h1{font-size:clamp(27px,4vw,42px);margin:0;letter-spacing:2px}.sub{color:var(--muted);margin-top:8px}
+.lifelines{display:flex;justify-content:center;flex-wrap:wrap;gap:9px;margin:20px 0}.life{border:1px solid #607bd0;background:linear-gradient(#1d3d8d,#101d50);color:white;border-radius:25px;padding:10px 14px}.life:disabled{opacity:.35;text-decoration:line-through;cursor:not-allowed}
+.qbox{padding:24px;border:2px solid #5274d2;border-radius:22px;background:linear-gradient(135deg,#192f78ee,#0b1645f5);text-align:center;box-shadow:0 0 30px #2456d444}.qnum{color:var(--gold);font-weight:bold;font-size:13px;letter-spacing:2px}.question{font-size:clamp(19px,2.6vw,27px);line-height:1.45;margin:13px 0 0}
+.answers{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}.answer{min-height:68px;display:flex;align-items:center;gap:12px;text-align:left;padding:14px 16px;border:1px solid #4c6ac0;border-radius:15px;background:linear-gradient(110deg,#18367e,#101b4c);color:white}.answer:hover:not(:disabled){border-color:var(--gold);background:#23499b}.letter{color:var(--gold);font-weight:900;min-width:24px}.answer.correct{background:#14865f;border-color:#75ffd0}.answer.wrong{background:#c93650;border-color:#ffb4c0}.answer.hide{visibility:hidden}.answer:disabled{cursor:default}
+.feedback{min-height:35px;text-align:center;color:var(--gold);font-weight:bold;line-height:1.5;margin:15px 0 8px}.controls{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}.primary,.secondary{border:0;border-radius:11px;padding:13px 20px;font-weight:bold}.primary{background:linear-gradient(90deg,#ffea9b,#ffc44b);color:#0a1235;box-shadow:0 4px #99701e}.secondary{background:#152760;color:white;border:1px solid #5975c5}.hidden{display:none!important}
+.money{border:1px solid #3954a0;border-radius:18px;padding:15px;background:#081238dd;height:max-content}.money h2{color:var(--gold);font-size:17px;text-align:center;margin:0 0 12px}.money ol{list-style:none;padding:0;margin:0;display:flex;flex-direction:column-reverse;gap:3px}.money li{display:flex;justify-content:space-between;padding:7px 9px;border-radius:7px;color:#c6d1f5;font-size:13px}.money li.safe{color:var(--gold);font-weight:bold}.money li.active{background:var(--gold);color:#07102f;font-weight:900}.money li.won{color:#75ffd0}.overlay{position:fixed;inset:0;z-index:5;display:grid;place-items:center;padding:20px;background:#03071de8;backdrop-filter:blur(7px)}.modal{width:min(510px,100%);padding:30px;text-align:center;border:2px solid #6687e5;border-radius:24px;background:linear-gradient(145deg,#1b327a,#0a1238);box-shadow:0 0 70px #3677ff44}.modal h2{color:var(--gold);font-size:clamp(25px,5vw,36px);margin:0 0 12px}.modal p{color:var(--muted);line-height:1.7}.note{text-align:center;color:#91a6df;font-size:12px;line-height:1.5;margin-top:18px}
+@media(max-width:800px){.layout{grid-template-columns:1fr}.money{grid-row:2}.money ol{display:grid;grid-template-columns:repeat(3,1fr)}.answers{grid-template-columns:1fr}.app{padding:13px}.top{align-items:flex-start}.qbox{padding:20px 14px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top"><div class="brand">GAMESHOW <small>KIẾN THỨC • MAY MẮN • TRIỆU PHÚ</small></div><div><button class="small" id="sound">🔊 Âm thanh: Tắt</button> <button class="small" id="new">↻ Ván mới</button></div></header>
+<div class="layout"><main>
+<section class="hero"><div class="logo">₫</div><h1>AI HIỂU SMO?</h1><p class="sub">15 câu hỏi • 3 quyền trợ giúp • Chinh phục đỉnh cao</p></section>
+<div class="lifelines"><button class="life" id="fifty">½ 50:50</button><button class="life" id="audience">👥 Hỏi khán giả</button><button class="life" id="phone">📞 Gọi người thân</button></div>
+<section class="qbox"><div class="qnum" id="qnum">CÂU HỎI 1 / 15</div><p class="question" id="question">Sẵn sàng bước vào ghế nóng?</p></section>
+<div class="answers" id="answers"></div><p class="feedback" id="feedback">Chọn đáp án bạn cho là đúng.</p>
+<div class="controls"><button class="primary hidden" id="next">CÂU TIẾP THEO →</button><button class="secondary" id="walk">Dừng cuộc chơi & nhận thưởng</button></div>
+<p class="note">Mỗi ván chọn ngẫu nhiên 15 câu từ ngân hàng câu hỏi. Thứ tự đáp án cũng được đảo vị trí.</p>
+</main><aside class="money"><h2>🏆 NẤC THANG TIỀN THƯỞNG</h2><ol id="ladder"></ol></aside></div>
+</div>
+<div class="overlay" id="overlay"><div class="modal"><h2 id="modalTitle">AI HIỂU SMO?</h2><p id="modalText">Bạn có đủ bình tĩnh và kiến thức để vượt qua 15 câu hỏi? Hãy chọn đáp án chính xác và sử dụng quyền trợ giúp thật khôn ngoan.</p><button class="primary" id="start">BẮT ĐẦU CHƠI ✨</button></div></div>
+<script>
+(() => {
+const bank = [
+["Trong công ty smo, ai là sếp?",["Mom","Dad","Cả 2","Văn Thiên"],0],
+["Trong công ty smo, ai là cậu bé thông minh?",["Phan Hải","Nam bé","Nam lớn","Tuyết Nhung"],1],
+["Ai là người được họp riêng nhiều nhất?",["Tuyết Nhung","Văn Thiên","Anh Phương","Lê Hùng"],0],
+["Ai là người hay khịa mẹ nhất?",["Phong gió","Văn Thiên","Anh Phương","Tuyết Nhung"],1],
+["Phong Smo có biệt danh là gì?",["Phong gió tai","A Gió","Cậu bé thông minh","Phong aka"],0],
+["Ai là người nói công ty: CÔNG TY CÁI GÌ CŨNG TUYỆT VỜI?",["Phương rảnh rỗi","Nhung bận bịu"],1],
+];
+const prizes=["200.000","400.000","600.000","1.000.000","2.000.000","3.000.000","6.000.000","10.000.000","14.000.000","22.000.000","30.000.000","40.000.000","60.000.000","85.000.000","150.000.000"];
+const safe=[4,9,14], letters=["A","B","C","D"];
+const $=id=>document.getElementById(id);
+let questions=[],index=0,safePrize=0,active=false,locked=false,used={fifty:false,audience:false,phone:false},soundOn=false,ctx;
+
+function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function tone(freq=650,dur=.12){if(!soundOn)return;try{ctx ||= new(window.AudioContext||window.webkitAudioContext)();let o=ctx.createOscillator(),g=ctx.createGain();o.frequency.value=freq;g.gain.setValueAtTime(.05,ctx.currentTime);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+dur);o.connect(g);g.connect(ctx.destination);o.start();o.stop(ctx.currentTime+dur)}catch(e){}}
+function buildLadder(){$("ladder").innerHTML=prizes.map((p,i)=>`<li data-i="${i}" class="${safe.includes(i)?"safe":""}"><span><span style="opacity:.65">${String(i+1).padStart(2,"0")}</span> ${safe.includes(i)?"🔒 ":""}Câu ${i+1}</span><b>${p}</b></li>`).join("")}
+function prepareQuestions(){questions=shuffle(bank).slice(0,15).map(row=>{let a=shuffle(row[1].map((text,original)=>({text,original})));return{q:row[0],a:a.map(x=>x.text),correct:a.findIndex(x=>x.original===row[2])}})}
+function render(){locked=false;let q=questions[index];$("qnum").textContent=`CÂU HỎI ${index+1} / 15`;$("question").textContent=q.q;$("feedback").textContent="Chọn đáp án bạn cho là đúng.";$("next").classList.add("hidden");$("walk").disabled=false;
+// Tạo lại 4 nút đáp án cho mỗi câu hỏi
+$("answers").innerHTML=q.a.map((answer,i)=>`<button type="button" class="answer" data-answer="${i}"><span class="letter">${letters[i]}:</span><span>${answer}</span></button>`).join("");
+[...$("ladder").children].forEach(li=>{let i=+li.dataset.i;li.classList.toggle("active",i===index);li.classList.toggle("won",i<index)});
+}
+function start(){prepareQuestions();index=0;safePrize=0;active=true;locked=false;used={fifty:false,audience:false,phone:false};["fifty","audience","phone"].forEach(id=>$(id).disabled=false);$("overlay").classList.add("hidden");buildLadder();render();tone(700)}
+function finish(title,text){active=false;$("modalTitle").textContent=title;$("modalText").textContent=text;$("start").textContent="CHƠI VÁN MỚI 🔄";$("overlay").classList.remove("hidden");$("next").classList.add("hidden");$("walk").disabled=true}
+function answer(i){if(!active||locked)return;locked=true;let q=questions[index],bs=[...$("answers").children];bs.forEach(b=>b.disabled=true);
+if(i===q.correct){bs[i].classList.add("correct");$("feedback").textContent="CHÍNH XÁC! Bạn đã vượt qua câu hỏi này! 🎉";tone(880,.2);if(safe.includes(index))safePrize=prizes[index];if(index===14){setTimeout(()=>finish("🏆 BẠN LÀ TRIỆU PHÚ!", "Xuất sắc! Bạn đã trả lời đúng cả 15 câu và chinh phục 150 triệu đồng!"),700)}else $("next").classList.remove("hidden")}
+else{bs[i].classList.add("wrong");bs[q.correct].classList.add("correct");$("feedback").textContent=`Rất tiếc! Đáp án đúng là ${letters[q.correct]}.`;tone(180,.3);setTimeout(()=>finish("🎙️ KẾT THÚC CUỘC CHƠI",`Bạn dừng chân ở câu ${index+1}. Tiền thưởng an toàn: ${safePrize||"0"} ₫.`),1200)}}
+function useFifty(){if(!active||locked||used.fifty)return;used.fifty=true;$("fifty").disabled=true;let correct=questions[index].correct;shuffle([0,1,2,3].filter(i=>i!==correct)).slice(0,2).forEach(i=>$("answers").children[i].classList.add("hide"));$("feedback").textContent="50:50: Hai đáp án sai đã bị loại!";tone(500)}
+function useAudience(){if(!active||locked||used.audience)return;used.audience=true;$("audience").disabled=true;let c=questions[index].correct,correctPct=48+Math.floor(Math.random()*28),remaining=100-correctPct,wrong=[0,1,2,3].filter(i=>i!==c),weights=[0,0,0,0];weights[c]=correctPct;let x=Math.floor(Math.random()*(remaining+1)),y=Math.floor(Math.random()*(remaining-x+1));weights[wrong[0]]=x;weights[wrong[1]]=y;weights[wrong[2]]=remaining-x-y;$("feedback").textContent="📊 Khán giả: "+weights.map((v,i)=>`${letters[i]} ${v}%`).join(" • ");tone(500)}
+function usePhone(){if(!active||locked||used.phone)return;used.phone=true;$("phone").disabled=true;let c=questions[index].correct,suggest=Math.random()<.78?c:[0,1,2,3].filter(i=>i!==c)[Math.floor(Math.random()*3)];$("feedback").textContent=`📞 Người thân nói: “Tôi nghiêng về đáp án ${letters[suggest]} — ${questions[index].a[suggest]}!”`;tone(500)}
+$("start").addEventListener("click",start);$("new").addEventListener("click",()=>{$("modalTitle").textContent="VÁN CHƠI MỚI";$("modalText").textContent="Bộ câu hỏi được chọn ngẫu nhiên; đáp án cũng đổi vị trí ở mỗi ván."; $("start").textContent="BẮT ĐẦU CHƠI ✨";$("overlay").classList.remove("hidden")});
+$("next").addEventListener("click",()=>{if(active&&locked){index++;render()}});$("walk").addEventListener("click",()=>{if(active&&!locked)finish("BẠN ĐÃ DỪNG CUỘC CHƠI",`Bạn nhận mức thưởng an toàn: ${safePrize||"0"} ₫.`)});
+$("answers").addEventListener("click",event=>{const button=event.target.closest("button[data-answer]");if(button)answer(Number(button.dataset.answer));});
+$("fifty").addEventListener("click",useFifty);$("audience").addEventListener("click",useAudience);$("phone").addEventListener("click",usePhone);
+$("sound").addEventListener("click",()=>{soundOn=!soundOn;$("sound").textContent=soundOn?"🔊 Âm thanh: Bật":"🔊 Âm thanh: Tắt";tone(660)});
+buildLadder();
+})();
+</script>
+</body>
+</html>
